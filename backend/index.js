@@ -17,6 +17,7 @@ app.all('/', (req, res) => {
     })
 })
 
+// middleware lari appUse ile kullan, ve errorhandler lari en sona koy
 app.use(require('./src/middlewares/errorHandler'))
 
 app.listen(PORT, ()=> console.log('running at http://127.0.0.1'))
