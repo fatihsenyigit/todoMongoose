@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 8000
 require('dotenv').config()
 require('express-async-errors')
 require('./src/configs/dbConnection')()
+app.use(express.json());
+
+
 
 app.all('/', (req, res) => {
     res.send({
@@ -16,6 +19,10 @@ app.all('/', (req, res) => {
         message: 'welcome to the backend of the todo project'
     })
 })
+
+//routes
+app.use('/todo', require("./src/routes/todoRouter"));
+
 
 // middleware lari appUse ile kullan, ve errorhandler lari en sona koy
 app.use(require('./src/middlewares/errorHandler'))
