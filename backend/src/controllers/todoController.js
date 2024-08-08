@@ -1,6 +1,7 @@
 
 'use strict';
 
+const CustomError = require('../helper/customError');
 const Todo = require('../models/todoModel')
 
 module.exports = {
@@ -14,7 +15,6 @@ module.exports = {
 
   create: async (req, res) => {
     const data = await Todo.create(req.body);
-    console.log(data)
     res.status(201).send({
       error: false,
       result: data
@@ -30,7 +30,13 @@ module.exports = {
   },
 
   update: async (req, res) => {
-    const data = await Todo.updateOne({ _id: req.params.id }, req.body);
+    // const data = await Todo.updateOne({ _id: req.params.id }, req.body);
+    // const updatedData = await Todo.findOne({ _id: req.params.id });
+
+    const data = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
     res.status(202).send({
       isError: false,
       data,
@@ -38,10 +44,12 @@ module.exports = {
   },
 
   delete: async (req, res) => {
-    const data = await Todo.deleteOne({ _id: req.params.id });
+    const { deletedCount } = await Todo.deleteOne({ _id: req.params.id });
+
+    if (!deletedCount) throw new CustomError('something went wrong!!', 404)
+
     res.status(204).send({
-      error: false,
-      resuld: data,
+      isError: false
     });
   },
 };
